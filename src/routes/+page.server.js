@@ -21,7 +21,7 @@ export const actions = {
 		const pss = data.get('pss');
 		console.log(`site = ${site} user = ${usr} and pss is ${pss}`);
 
-		fetchData(site, usr, pss);
+		return fetchData(site, usr, pss);
 	}
 };
 
@@ -79,10 +79,11 @@ async function fetchData(site, usr, pss) {
 		// const myCookies = await res.headers.get('set-cookie');
 		// cookies = await cookieHeaders;
 		console.log('no errors');
-		await console.log(`cookies are ${res.headers.getSetCookie()}`);
+		// await console.log(`cookies are ${res.headers.getSetCookie()}`);
 		response = await res.text();
+		console.log(response);
 		errorResponse = null;
-		return response;
+		return { response: response, cookie: res.headers.getSetCookie() };
 	} catch (error) {
 		console.error('Error:', error);
 		response = null;

@@ -1,8 +1,9 @@
 <script>
-	let site = 'test';
-	let usr = 'user';
-	let pss = 'pass';
+	let site = '';
+	let usr = '';
+	let pss = '';
 	export let data;
+	export let form;
 </script>
 
 <form method="POST" action="?/login">
@@ -21,10 +22,15 @@
 	<button type="submit">Login</button>
 </form>
 
-{#await data then value}
-	{#if data}
-		cookie value is
-		<div>{@html data.response}</div>
-	{/if}
+{#await data}
+	<!-- promise is pending -->
+{:then value}
+	<!-- promise was fulfilled -->
+
+	cookie value is {form?.cookie}
+	<div>
+		HTML received is :
+		{@html form?.response}
+	</div>
 	<!-- promise was fulfilled -->
 {/await}
