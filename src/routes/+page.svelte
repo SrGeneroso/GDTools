@@ -1,6 +1,6 @@
 <script>
-	let site = '';
-	let usr = '';
+	let site = 'dimeirauto';
+	let usr = 'dimeirauto';
 	let pss = '';
 	export let data;
 	export let form;
@@ -30,7 +30,7 @@
 	cookie value is {form?.cookie}
 	<div>
 		HTML received is :
-		{@html form?.response}
+		{form?.response}
 	</div>
 	<!-- promise was fulfilled -->
 {/await}

@@ -2,36 +2,53 @@
 // let usr;
 // let pss;
 // let force = false;
-let cookies = null;
 let response;
 let errorResponse = null;
+let loadNumber = 0;
 
 export function load() {
-	console.log('logloglog');
+	loadNumber++;
+	console.log('load fucntion executed ' + loadNumber);
 
-	return { response: cookies };
+	return;
 }
 
 export const actions = {
-	login: async ({ cookies, request }) => {
+	login: async ({ request }) => {
 		const data = await request.formData();
-		console.log(data);
-		const site = data.get('site');
-		const usr = data.get('usr');
-		const pss = data.get('pss');
-		console.log(`site = ${site} user = ${usr} and pss is ${pss}`);
-
-		return fetchData(site, usr, pss);
+		const sessionID = await getSession();
+		return await fetchCredentials(data, sessionID);
 	}
 };
 
-async function fetchData(site, usr, pss) {
+async function getSession() {
+	try {
+		let session;
+		const response = await fetch('https://app.gdtaller.com/app/app_login.php');
+		const cookies = response.headers.get('set-cookie');
+
+		if (cookies) {
+			const cookie = cookies.split(';');
+			cookie.forEach((part) => {
+				const cookieParts = part.trim().split('=');
+				if (cookieParts[0] === 'PHPSESSID') {
+					session = cookieParts[1];
+				}
+			});
+		}
+		return session;
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+async function fetchCredentials(data, sessionID) {
 	const url = 'https://app.gdtaller.com/app/app_login.php';
 
 	const formData = new URLSearchParams();
-	formData.append('txtSite', site);
-	formData.append('txtLogin', usr);
-	formData.append('txtClave', pss);
+	formData.append('txtSite', data.get('site'));
+	formData.append('txtLogin', data.get('usr'));
+	formData.append('txtClave', data.get('pss'));
 	formData.append('BtnLoginApp_btn', 'Entrar');
 	formData.append('BtnLoginApp', 'Entrar');
 
@@ -42,7 +59,7 @@ async function fetchData(site, usr, pss) {
 		'accept-language': 'en-US,en;q=0.7',
 		'cache-control': 'max-age=0',
 		'content-type': 'application/x-www-form-urlencoded',
-		cookie: '',
+		cookie: `PHPSESSID=${sessionID}`,
 		dnt: '1',
 		origin: 'https://app.gdtaller.com',
 		referer: 'https://app.gdtaller.com/app/app_login.php',
@@ -74,16 +91,19 @@ async function fetchData(site, usr, pss) {
 			};
 			throw new Error(errorData.error.DESC || 'Network response was not ok');
 		}
+		console.log('no errors');
+		// console.log(await res.headers.forEach());
 
-		// const cookieHeaders = await res.headers.getAll();
+		const cookieHeaders = await res.headers.get('set-cookie');
+		console.log('response cookie is ' + cookieHeaders);
+
 		// const myCookies = await res.headers.get('set-cookie');
 		// cookies = await cookieHeaders;
-		console.log('no errors');
 		// await console.log(`cookies are ${res.headers.getSetCookie()}`);
 		response = await res.text();
-		console.log(response);
+		// console.log(response);
 		errorResponse = null;
-		return { response: response, cookie: res.headers.getSetCookie() };
+		return { response: response, cookie: sessionID };
 	} catch (error) {
 		console.error('Error:', error);
 		response = null;
