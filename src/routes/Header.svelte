@@ -1,17 +1,10 @@
 <script>
-	import logo from '$lib/images/svelte-logo.svg';
 	import github from '$lib/images/github.svg';
 </script>
 
 <header>
 	<div class="corner">
 		<a href="https://github.com/SrGeneroso/GDTools">
-			<img src={logo} alt="Repo" />
-		</a>
-	</div>
-
-	<div class="corner">
-		<a href="https://github.com/sveltejs/kit">
 			<img src={github} alt="GitHub" />
 		</a>
 	</div>
