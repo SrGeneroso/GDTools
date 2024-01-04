@@ -85,7 +85,6 @@
 				{#if form.processedClients}
 					hello
 					<pre>{JSON.stringify(form.processedClients)}</pre>
-					{@debug form}
 				{:else if json}
 					<pre>{json}</pre>
 				{/if}
