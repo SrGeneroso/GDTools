@@ -2,13 +2,14 @@
 	import { enhance } from '$app/forms';
 	import { parse } from 'svelte/compiler';
 
-	let site = '';
-	let usr = '';
+	let site = 'dimeirauto';
+	let usr = 'dimeirauto';
 	let pss = '';
 	export let data;
 	export let form;
 	let clientOutputFile;
 	let vehicleOutputFile;
+	let installation = '2124';
 	let json;
 
 	function handleFile(event, callback) {
@@ -44,7 +45,7 @@
 			<br />
 			<div>
 				<form method="post" action="?/insertClient" use:enhance>
-					<input type="hidden" name="auth" value={'auth'} />
+					<input type="hidden" name="auth" value={form.cookie} />
 					<input type="hidden" name="clientList" value={json} />
 					<label for="clientInput">Fichero Clientes</label>
 					<input
@@ -70,13 +71,21 @@
 						}}
 						accept="application/json"
 					/>
+
+					<br /><br />
+					<label for="installation">ID Instalacion</label>
+					<input type="text" name="installation" id="installationInput" bind:value={installation} />
+					<br />
+					<br />
 					<button type="submit" disabled={json == undefined}> Insert Clients </button>
 				</form>
 			</div>
 			<br />
 			<div>
 				{#if form.processedClients}
-					<pre>{form.processedClients}</pre>
+					hello
+					<pre>{JSON.stringify(form.processedClients)}</pre>
+					{@debug form}
 				{:else if json}
 					<pre>{json}</pre>
 				{/if}
