@@ -1,6 +1,5 @@
 <script>
 	import { enhance } from '$app/forms';
-	import { parse } from 'svelte/compiler';
 
 	let site = 'dimeirauto';
 	let usr = 'dimeirauto';
